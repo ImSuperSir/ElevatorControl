@@ -29,38 +29,24 @@ namespace ElevatorSystem.API.Controllers
         [HttpPost("InsidRequest")]
         public async Task<IActionResult> Post([FromBody] ElevatorInsideRequestDto elevatorRequestDto)
         {
-            try
-            {
-                await _RequestDispatcherService.AddRequest(elevatorRequestDto.ToElevatorRequest());
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing request");
-                return StatusCode(500, "Error processing request");
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _RequestDispatcherService.AddRequest(elevatorRequestDto.ToElevatorRequest());
+            return Ok();
+
         }
 
 
         [HttpPost("OutSideRequest")]
-        public async Task<IActionResult> Post([FromBody] List<ElevatorInsideRequestDto> elevatorRequestListDto)
+        public async Task<IActionResult> Post([FromBody] ElevatorOutsideRequestDto elevatorOutsideRequestDto)
         {
-            try
-            {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                foreach (var request in elevatorRequestListDto)
-                {
-                    await _RequestDispatcherService.AddRequest(request.ToElevatorRequest());
-                }
+            await _RequestDispatcherService.AddRequest(elevatorOutsideRequestDto.ToElevatorRequest());
+            return Ok();
 
-                //await _elevatorService.ProcessRequestElevator(elevatorRequestDtoList.ToElevatorRequest());
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing request");
-                return StatusCode(500, "Error processing request");
-            }
         }
 
     }
