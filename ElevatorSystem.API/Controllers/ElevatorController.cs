@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ElevatorSystem.Application;
 using ElevatorSystem.Application.DTOs;
 using ElevatorSystem.Application.Extensions;
+using ElevatorSystem.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,22 +16,44 @@ namespace ElevatorSystem.API.Controllers
     public class ElevatorController : ControllerBase
     {
         private readonly ILogger<ElevatorController> _logger;
-        private readonly IElevatorService _elevatorService;
+        private readonly IRequestDispatcherService _RequestDispatcherService;
 
         public ElevatorController(ILogger<ElevatorController> logger
-                        , IElevatorService elevatorService)
+                        , IRequestDispatcherService pIRequestDispatcherService)
         {
             _logger = logger;
-            _elevatorService = elevatorService;
+            _RequestDispatcherService = pIRequestDispatcherService;
         }
 
 
-        [HttpPost]
+        [HttpPost("UniqueRequest")]
         public async Task<IActionResult> Post([FromBody] ElevatorRequestDto elevatorRequestDto)
         {
             try
             {
-                await _elevatorService.ProcessRequestElevator(elevatorRequestDto.ToElevatorRequest());
+                await _RequestDispatcherService.AddRequest(elevatorRequestDto.ToElevatorRequest());
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing request");
+                return StatusCode(500, "Error processing request");
+            }
+        }
+
+
+        [HttpPost("MultipleRequests")]
+        public async Task<IActionResult> Post([FromBody] List<ElevatorRequestDto> elevatorRequestListDto)
+        {
+            try
+            {
+
+                foreach (var request in elevatorRequestListDto)
+                {
+                    await _RequestDispatcherService.AddRequest(request.ToElevatorRequest());
+                }
+
+                //await _elevatorService.ProcessRequestElevator(elevatorRequestDtoList.ToElevatorRequest());
                 return Ok();
             }
             catch (Exception ex)

@@ -9,6 +9,6 @@ namespace ElevatorSystem.Application
 {
     public interface IElevatorService
     {
-        Task ProcessRequestElevator(ElevatorRequest request);
+        Task ProcessRequest(ElevatorRequest request);
     }
 }

@@ -8,14 +8,28 @@ namespace ElevatorSystem.Domain.Entities
 {
     public class ElevatorRequest
     {
-        public int Floor { get; set; }
+        public int FromFloor { get; set; }
 
+        public int ToFloor { get; set; }
         public ElevatorDirection Direction { get; set; }
 
         public ElevatorRequest(int floor, ElevatorDirection direction)
         {
-            Floor = floor;
+            ToFloor = floor;
             Direction = direction;
+        }
+
+        public int NextFloor(int currentFloor)
+        {   int x = 0;
+            if (Direction == ElevatorDirection.Up)
+            {
+                x = ToFloor > currentFloor ?  currentFloor + 1 : ToFloor;
+            }
+            else
+            {
+                x = ToFloor <= currentFloor ? ToFloor : currentFloor - 1;
+            }
+            return x;
         }
     }
 }

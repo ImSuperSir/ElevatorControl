@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ElevatorSystem.Domain.Events;
@@ -8,38 +9,133 @@ namespace ElevatorSystem.Domain.Entities
 {
 
 
-    public static class ElevatorRequestList 
+    public class ElevatorRequestList
     {
-        private static readonly List<ElevatorRequest> _elevatorRequests = new List<ElevatorRequest>();
-        private static readonly object _lock = new object();
+        private readonly List<ElevatorRequest> _elevatorRequests;
+        private readonly object _lock = new object();
+
+        public ElevatorRequestList()
+        {
+            _elevatorRequests = new List<ElevatorRequest>();
+        }
 
 
-        public static void AddRequest(ElevatorRequest request)
+        public int Count
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _elevatorRequests.Count;
+                }
+            }
+        }
+        private void Add(ElevatorRequest request)
         {
             lock (_lock)
             {
-                if(!_elevatorRequests.Any(x => x.Floor == request.Floor 
+                if (!_elevatorRequests.Any(x => x.ToFloor == request.ToFloor
                                     && x.Direction == request.Direction))
+                {
                     _elevatorRequests.Add(request);
+                    Console.WriteLine($"Request added: {request.ToFloor} {request.Direction}, total requests: {_elevatorRequests.Count}");
+                }
+                else
+                {
+                    Console.WriteLine($"Request already exists: {request.ToFloor} {request.Direction}");
+                }
+
             }
         }
+        public void AddRequest(ElevatorRequest pRequest)
+        {
+            Add(pRequest);
+        }
+        public void AddRequestRange(List<ElevatorRequest> pRequests)
+        {
+            pRequests.ForEach(request => Add(request));
+        }
 
-        public static ElevatorRequest? GetNextRequest( ElevatorDirection direction, int currentFloor)
+    private IEnumerable<ElevatorRequest> GetFilteredAndOrderedRequests(ElevatorDirection direction, int currentFloor)
+    {
+        IEnumerable<ElevatorRequest> requests = _elevatorRequests.Where(x => x.Direction == direction);
+
+        if (direction == ElevatorDirection.Down)
+        {
+            requests = requests.Where(x => x.ToFloor <= currentFloor)
+                               .OrderByDescending(x => x.ToFloor);
+        }
+        else if (direction == ElevatorDirection.Up)
+        {
+            requests = requests.Where(x => x.ToFloor >= currentFloor)
+                               .OrderBy(x => x.ToFloor);
+        }
+
+        return requests;
+    }
+
+
+        public List<ElevatorRequest> GetAllNextRequest(ElevatorDirection direction, int currentFloor)
         {
             lock (_lock)
             {
-                 return _elevatorRequests.Where(x => x.Floor > currentFloor && x.Direction == direction)
-                                .OrderBy(x => x.Floor)
-                                .FirstOrDefault();
+                //TODO: check for the Direction of the elevator when is not moving
+
+                var lNextRequest = _elevatorRequests.Where(x => x.Direction == direction);
+                if (direction == ElevatorDirection.Down)
+                {
+                    lNextRequest = lNextRequest.Where(x => x.ToFloor <= currentFloor);  
+                    lNextRequest = lNextRequest.OrderByDescending(x => x.ToFloor);
+                }
+                else if (direction == ElevatorDirection.Up)
+                {
+                    lNextRequest = lNextRequest.Where(x => x.ToFloor >= currentFloor);
+                    lNextRequest = lNextRequest.OrderBy(x => x.ToFloor);
+                }
+
+               return lNextRequest.ToList();
+
             }
         }
 
-        public static void RemoveRequest(ElevatorRequest request)
+        public ElevatorRequest? GetNextRequest(ElevatorDirection direction, int currentFloor)
         {
             lock (_lock)
             {
-                _elevatorRequests.Remove(request);
+                //TODO: check for the Direction of the elevator when is not moving
+
+                var lNextRequest = _elevatorRequests.Where(x => x.Direction == direction);
+                if (direction == ElevatorDirection.Down)
+                {
+                    lNextRequest = lNextRequest.Where(x => x.ToFloor <= currentFloor);
+                    lNextRequest = lNextRequest.OrderByDescending(x => x.ToFloor);
+                }
+                else if (direction == ElevatorDirection.Up)
+                {
+                    lNextRequest = lNextRequest.Where(x => x.ToFloor >= currentFloor);
+                    lNextRequest = lNextRequest.OrderBy(x => x.ToFloor);
+                }
+
+                //check solution with extension or some anonymous function or predicate 
+                //TODO, if the elevator is stationay, then we need to check for the nearest elevator
+
+                return lNextRequest.FirstOrDefault();
+
+
             }
+        }
+
+        private void Remove(ElevatorRequest pRequest)
+        {
+            lock (_lock)
+            {
+                _elevatorRequests.Remove(pRequest);
+            }
+        }
+
+        public void RemoveRequests(List<ElevatorRequest> pRequests)
+        {
+            pRequests.ForEach(request => Remove(request));
         }
     }
 }
