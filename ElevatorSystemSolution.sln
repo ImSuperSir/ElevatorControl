@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C0FF8E5E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSystem.Domain.UnitTests", "Tests\ElevatorSystem.Domain.UnitTests\ElevatorSystem.Domain.UnitTests.csproj", "{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSystem.Utils", "ElevatorSystem.Utils\ElevatorSystem.Utils.csproj", "{ED18DD55-7764-4BBC-BF04-7A43E8A9A35B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED18DD55-7764-4BBC-BF04-7A43E8A9A35B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED18DD55-7764-4BBC-BF04-7A43E8A9A35B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED18DD55-7764-4BBC-BF04-7A43E8A9A35B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED18DD55-7764-4BBC-BF04-7A43E8A9A35B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -69,7 +69,13 @@ namespace ElevatorSystem.Domain.Entities
             return requests;
         }
 
-
+        public List<ElevatorRequest> GetAllRequests()
+        {
+            lock (_lock)
+            {
+                return _elevatorRequests.ToList();
+            }
+        }
         public List<ElevatorRequest> GetAllNextRequest(ElevatorDirection direction, int currentFloor)
         {
             lock (_lock)

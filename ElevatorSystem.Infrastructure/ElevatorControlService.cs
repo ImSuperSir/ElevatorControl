@@ -17,13 +17,12 @@ namespace ElevatorSystem.Infrastructure
         MaxFloor = 5
     }
     public class ElevatorControlService : BackgroundService, IElevatorControlService
-
     {
 
         #region Properties
 
         public Guid Id { get; init; }
-        ElevatorRequestList NextElevatorRequests { get; }
+        ElevatorRequestList ElevatorCommands { get; }
 
         #endregion
 
@@ -31,7 +30,7 @@ namespace ElevatorSystem.Infrastructure
         {
             Id = Guid.NewGuid();
             Direction = ElevatorDirection.Up;  //Initial floor is 1
-            NextElevatorRequests = new ElevatorRequestList();
+            ElevatorCommands = new ElevatorRequestList();
 
             Console.WriteLine($"ElevatorControlService: {Id}, created {System.DateTime.UtcNow.ToString()}");
             pIDispatcherClientConnect.Connect((IElevatorControlService)this);
@@ -45,7 +44,9 @@ namespace ElevatorSystem.Infrastructure
             await Task.Delay(5000);
             while (!stoppingToken.IsCancellationRequested)
             {
-                ElevatorRequest? nextRequest = NextElevatorRequests.GetNextRequest(Direction, CurrentFloor);
+                 Console.WriteLine($"Elevator:{Id.ToString().Substring(30)} has: {ElevatorCommands.Count} request to attend");   
+
+                ElevatorRequest? nextRequest = ElevatorCommands.GetNextRequest(Direction, CurrentFloor);
                 if (nextRequest != null)
                 {
                     Direction = nextRequest.Direction;
@@ -82,7 +83,7 @@ namespace ElevatorSystem.Infrastructure
 
         public void AddRequests(List<ElevatorRequest> requestList)
         {
-            NextElevatorRequests.AddRequestRange(requestList);
+            ElevatorCommands.AddRequestRange(requestList);
         }
 
         public void MoveOneStep(int floor)
@@ -126,7 +127,7 @@ namespace ElevatorSystem.Infrastructure
 
         public void RemoveRequestList(List<ElevatorRequest> requestList)
         {
-            NextElevatorRequests.RemoveRequests(requestList);
+            ElevatorCommands.RemoveRequests(requestList);
         }
 
 

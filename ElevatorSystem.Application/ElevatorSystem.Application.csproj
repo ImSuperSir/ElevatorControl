@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ElevatorSystem.Domain\ElevatorSystem.Domain.csproj" />
+    <ProjectReference Include="..\ElevatorSystem.Utils\ElevatorSystem.Utils.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

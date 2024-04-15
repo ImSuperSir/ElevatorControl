@@ -5,19 +5,35 @@ namespace ElevatorSystem.Domain.Entities
 {
     public class ElevatorRequest
     {
-        public int FromFloor { get; set; }
+        public int FromFloor { get; init; }
 
-        public int ToFloor { get; set; }
+        public int ToFloor { get; init; }
         public ElevatorDirection Direction { get; set; }
+        RequestFrom RequestSource { get; init; }
 
-        public ElevatorRequest(int floor, ElevatorDirection direction)
+        /// <summary>
+        /// Inside Request
+        /// </summary>
+        /// <param name="floor">The inside buttonNumber</param>
+        public ElevatorRequest(int floor)
         {
             ToFloor = floor;
-            Direction = direction;
+            RequestSource = RequestFrom.Inside;
         }
 
+        /// <summary>
+        /// Outside Request
+        /// </summary>
+        /// <param name="fromFloor"></param>
+        /// <param name="direction"></param>
+        public ElevatorRequest(int fromFloor, ElevatorDirection direction)
+        {
+            FromFloor = fromFloor; // this is the floor wher the elevator is called from
+            ToFloor = fromFloor;   // So, the elevator need to go there
+            Direction = direction;
+            RequestSource = RequestFrom.Outside;
+        }
 
-        //Generate the tests using xunit.net framework
         public int NextFloor(int pCurrentFloor)
         {
             int x = 0;

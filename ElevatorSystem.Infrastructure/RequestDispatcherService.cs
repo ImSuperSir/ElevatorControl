@@ -37,7 +37,7 @@ namespace ElevatorSystem.Infrastructure
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
 
-            //await Task.Delay(30000);
+            //await Task.Delay(30000); // just for testing
             while (!stoppingToken.IsCancellationRequested)
             {
                 Console.WriteLine($"Dispatcher:{Id.ToString().Substring(30)} count: {_RequestList.Count} ");
@@ -45,7 +45,7 @@ namespace ElevatorSystem.Infrastructure
                 {
                     Dispatch(elevator);
                 }
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(4000, stoppingToken); 
             }
         }
 
@@ -60,7 +60,7 @@ namespace ElevatorSystem.Infrastructure
         }
         public void Dispatch(IElevatorControlService elevator)
         {
-            var lElevatorRequest = _RequestList.GetAllNextRequest(elevator.Direction, elevator.CurrentFloor);
+            var lElevatorRequest = _RequestList.GetAllRequests();// NextRequest(elevator.Direction, elevator.CurrentFloor);
 
             if (lElevatorRequest.Count > 0)
             {
