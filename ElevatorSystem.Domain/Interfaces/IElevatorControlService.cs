@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElevatorSystem.Domain.Entities;
+using ElevatorSystem.Domain.Enums;
 using ElevatorSystem.Domain.Events;
 
 namespace ElevatorSystem.Domain.Interfaces

@@ -19,7 +19,7 @@ namespace ElevatorSystem.Infrastructure
 
         #region Properties
 
-        public Guid Id { get; init; } 
+        public Guid Id { get; init; }
         private readonly List<IElevatorControlService> _ElevatorControllers;
         private readonly ElevatorRequestList _RequestList;
 
@@ -88,46 +88,5 @@ namespace ElevatorSystem.Infrastructure
         #endregion
 
 
-        // public List<ElevatorRequest> GetNextRequests(IElevatorContolService elevatorContolService)
-        // {
-        //     //return _elevatorRequestList.GetNextRequest(elevatorContolService.Direction, elevatorContolService.CurrentFloor);
-        // }
-
-
-
-        #region listener funcionality
-
-        // public void RegisterElevator(IElevatorControlService elevatorControl)
-        // {
-        //     _ElevatorControllers.Add(elevatorControl);
-        //     elevatorControl.OnElevatorMovedEvent += OneElevatorHasMoveEvent;
-        // }
-
-        // private void OneElevatorHasMoveEvent(object sender, ElevatorMovedEvent pElevatorMovedEvent)
-        // {
-        //     // IElevatorContolService lIElevatorContolService = (IElevatorContolService)sender.GetType();
-
-        //     // //ar lElevatorRequest = _elevatorRequestList.GetNextRequest(lIElevatorContolService.Direction, lIElevatorContolService.CurrentFloor);
-
-        //     // if (GetNextRequests(lIElevatorContolService).Count > 0)
-        //     // {
-        //     //     foreach (var request in GetNextRequests(lIElevatorContolService))
-        //     //     {
-        //     //         //Verify if this works, if yes, then the SendRequetsToElevator method is not needed
-        //     //         lIElevatorContolService.AddRequest(request);
-        //     //         RemoveRequest(request);
-        //     //     }
-        //     //     //SendRequetsToElevator(lIElevatorContolService);
-        //     // }
-        // }
-        // public void SubscribeToElevatorMovedEvent(IElevatorControlService elevator, EventHandler<ElevatorMovedEvent> handler)
-        // {
-        //     throw new NotImplementedException();
-        // }
-
-
-
-
-        #endregion
     }
 }

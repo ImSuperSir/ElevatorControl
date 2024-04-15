@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ElevatorSystem.Domain.Events;
+using System.Collections;
+using ElevatorSystem.Domain.Enums;
 
 namespace ElevatorSystem.Domain.Entities
 {
@@ -19,15 +16,26 @@ namespace ElevatorSystem.Domain.Entities
             Direction = direction;
         }
 
-        public int NextFloor(int currentFloor)
-        {   int x = 0;
-            if (Direction == ElevatorDirection.Up)
+
+        //Generate the tests using xunit.net framework
+        public int NextFloor(int pCurrentFloor)
+        {
+            int x = 0;
+
+            switch (Direction, ToFloor, pCurrentFloor)
             {
-                x = ToFloor > currentFloor ?  currentFloor + 1 : ToFloor;
-            }
-            else
-            {
-                x = ToFloor <= currentFloor ? ToFloor : currentFloor - 1;
+                case (ElevatorDirection.Up, int toFloor, int currentFloor) when toFloor > currentFloor:
+                    x = currentFloor + 1;
+                    break;
+                case (ElevatorDirection.Up, int toFloor, int currentFloor) when toFloor <= currentFloor:
+                    x = toFloor;
+                    break;
+                case (ElevatorDirection.Down, int toFloor, int currentFloor) when toFloor < currentFloor:
+                    x = currentFloor - 1;
+                    break;
+                case (ElevatorDirection.Down, int toFloor, int currentFloor) when toFloor >= currentFloor:
+                    x = toFloor;
+                    break;
             }
             return x;
         }

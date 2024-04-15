@@ -9,17 +9,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSystem.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSystem.Infrastructure", "ElevatorSystem.Infrastructure\ElevatorSystem.Infrastructure.csproj", "{A46FBE9D-7F77-4263-A70B-5499274D6294}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSystem.Notifications", "ElevatorSystem.Notifications\ElevatorSystem.Notifications.csproj", "{B9AC87BD-B8E0-4CEF-8169-79EA6F85B0D5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSystem.API", "ElevatorSystem.API\ElevatorSystem.API.csproj", "{9A30C47C-E9B9-472C-AF05-20C37C1E9280}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C0FF8E5E-2F14-4232-ADFB-B7A950D6D12A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSystem.Domain.UnitTests", "Tests\ElevatorSystem.Domain.UnitTests\ElevatorSystem.Domain.UnitTests.csproj", "{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C27688B7-4273-4DF5-BE9F-ACC5F96A72B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -34,13 +33,19 @@ Global
 		{A46FBE9D-7F77-4263-A70B-5499274D6294}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A46FBE9D-7F77-4263-A70B-5499274D6294}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A46FBE9D-7F77-4263-A70B-5499274D6294}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9AC87BD-B8E0-4CEF-8169-79EA6F85B0D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9AC87BD-B8E0-4CEF-8169-79EA6F85B0D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9AC87BD-B8E0-4CEF-8169-79EA6F85B0D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9AC87BD-B8E0-4CEF-8169-79EA6F85B0D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A30C47C-E9B9-472C-AF05-20C37C1E9280}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A30C47C-E9B9-472C-AF05-20C37C1E9280}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A30C47C-E9B9-472C-AF05-20C37C1E9280}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A30C47C-E9B9-472C-AF05-20C37C1E9280}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1C722ED7-39FD-44C0-976A-1CE1E7E3AD21} = {C0FF8E5E-2F14-4232-ADFB-B7A950D6D12A}
 	EndGlobalSection
 EndGlobal

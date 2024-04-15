@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using ElevatorSystem.Domain.Events;
+using ElevatorSystem.Domain.Enums;
 
 namespace ElevatorSystem.Domain.Entities
 {
@@ -56,45 +51,30 @@ namespace ElevatorSystem.Domain.Entities
             pRequests.ForEach(request => Add(request));
         }
 
-    private IEnumerable<ElevatorRequest> GetFilteredAndOrderedRequests(ElevatorDirection direction, int currentFloor)
-    {
-        IEnumerable<ElevatorRequest> requests = _elevatorRequests.Where(x => x.Direction == direction);
-
-        if (direction == ElevatorDirection.Down)
+        private IEnumerable<ElevatorRequest> GetFilteredAndOrderedRequests(ElevatorDirection direction, int currentFloor)
         {
-            requests = requests.Where(x => x.ToFloor <= currentFloor)
-                               .OrderByDescending(x => x.ToFloor);
-        }
-        else if (direction == ElevatorDirection.Up)
-        {
-            requests = requests.Where(x => x.ToFloor >= currentFloor)
-                               .OrderBy(x => x.ToFloor);
-        }
+            IEnumerable<ElevatorRequest> requests = _elevatorRequests.Where(x => x.Direction == direction);
 
-        return requests;
-    }
+            if (direction == ElevatorDirection.Down)
+            {
+                requests = requests.Where(x => x.ToFloor <= currentFloor)
+                                   .OrderByDescending(x => x.ToFloor);
+            }
+            else if (direction == ElevatorDirection.Up)
+            {
+                requests = requests.Where(x => x.ToFloor >= currentFloor)
+                                   .OrderBy(x => x.ToFloor);
+            }
+
+            return requests;
+        }
 
 
         public List<ElevatorRequest> GetAllNextRequest(ElevatorDirection direction, int currentFloor)
         {
             lock (_lock)
             {
-                //TODO: check for the Direction of the elevator when is not moving
-
-                var lNextRequest = _elevatorRequests.Where(x => x.Direction == direction);
-                if (direction == ElevatorDirection.Down)
-                {
-                    lNextRequest = lNextRequest.Where(x => x.ToFloor <= currentFloor);  
-                    lNextRequest = lNextRequest.OrderByDescending(x => x.ToFloor);
-                }
-                else if (direction == ElevatorDirection.Up)
-                {
-                    lNextRequest = lNextRequest.Where(x => x.ToFloor >= currentFloor);
-                    lNextRequest = lNextRequest.OrderBy(x => x.ToFloor);
-                }
-
-               return lNextRequest.ToList();
-
+                return GetFilteredAndOrderedRequests(direction, currentFloor).ToList();
             }
         }
 
@@ -102,26 +82,7 @@ namespace ElevatorSystem.Domain.Entities
         {
             lock (_lock)
             {
-                //TODO: check for the Direction of the elevator when is not moving
-
-                var lNextRequest = _elevatorRequests.Where(x => x.Direction == direction);
-                if (direction == ElevatorDirection.Down)
-                {
-                    lNextRequest = lNextRequest.Where(x => x.ToFloor <= currentFloor);
-                    lNextRequest = lNextRequest.OrderByDescending(x => x.ToFloor);
-                }
-                else if (direction == ElevatorDirection.Up)
-                {
-                    lNextRequest = lNextRequest.Where(x => x.ToFloor >= currentFloor);
-                    lNextRequest = lNextRequest.OrderBy(x => x.ToFloor);
-                }
-
-                //check solution with extension or some anonymous function or predicate 
-                //TODO, if the elevator is stationay, then we need to check for the nearest elevator
-
-                return lNextRequest.FirstOrDefault();
-
-
+                return GetFilteredAndOrderedRequests(direction, currentFloor).FirstOrDefault();
             }
         }
 

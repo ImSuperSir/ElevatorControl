@@ -26,8 +26,8 @@ namespace ElevatorSystem.API.Controllers
         }
 
 
-        [HttpPost("UniqueRequest")]
-        public async Task<IActionResult> Post([FromBody] ElevatorRequestDto elevatorRequestDto)
+        [HttpPost("InsidRequest")]
+        public async Task<IActionResult> Post([FromBody] ElevatorInsideRequestDto elevatorRequestDto)
         {
             try
             {
@@ -42,8 +42,8 @@ namespace ElevatorSystem.API.Controllers
         }
 
 
-        [HttpPost("MultipleRequests")]
-        public async Task<IActionResult> Post([FromBody] List<ElevatorRequestDto> elevatorRequestListDto)
+        [HttpPost("OutSideRequest")]
+        public async Task<IActionResult> Post([FromBody] List<ElevatorInsideRequestDto> elevatorRequestListDto)
         {
             try
             {

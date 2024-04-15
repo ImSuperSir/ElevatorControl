@@ -1,8 +1,7 @@
-namespace ElevatorSystem.Domain.Events;
+namespace ElevatorSystem.Domain.Enums;
 
 public enum ElevatorDirection
 {
   Up = 1,
-  Down = 2,
-  Stationary = 3
+  Down = 2
 }

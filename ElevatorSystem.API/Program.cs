@@ -6,12 +6,7 @@ using ElevatorSystem.Infrastructure;
 var builder = WebApplication.CreateBuilder(args); // Create a new instance of the WebApplicationBuilder class.
 
 
-// Add services to the container.
 
-
-// builder.Services.AddSingleton<IDispatcherClientConnect, RequestDispatcherService>();
-
-// builder.Services.AddSingleton<IElevatorControlService, ElevatorControlService>();
 
 var lDispatcherService = new RequestDispatcherService();
 builder.Services.AddHostedService(sp => lDispatcherService);
@@ -22,7 +17,6 @@ var lRequestProcessor = new ElevatorControlService(lDispatcherService);
 builder.Services.AddHostedService(sp => lRequestProcessor);
 builder.Services.AddSingleton<IElevatorControlService>(lRequestProcessor);
 
-// builder.Services.AddHostedService<ElevatorControlService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

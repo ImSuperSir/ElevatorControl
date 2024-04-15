@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+//using ElevatorSystem.Domain.Enums;
+
+using ElevatorSystem.Domain.Enums;
 
 namespace ElevatorSystem.Domain.Events
 {
-    public class ElevatorRequestedEvent 
+    public class ElevatorRequestedEvent
     {
         public int RequestedFloor { get; }
         public ElevatorDirection Direction { get; }

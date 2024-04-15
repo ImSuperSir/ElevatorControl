@@ -6,6 +6,7 @@ using ElevatorSystem.Domain.Entities;
 using ElevatorSystem.Domain.Interfaces;
 using Microsoft.Extensions.Hosting;
 using ElevatorSystem.Domain.Events;
+using ElevatorSystem.Domain.Enums;
 
 namespace ElevatorSystem.Infrastructure
 {
@@ -86,6 +87,10 @@ namespace ElevatorSystem.Infrastructure
 
         public void MoveOneStep(int floor)
         {
+
+            if(floor == CurrentFloor)
+                         return;
+            
             Console.WriteLine($"Direction:{Direction.ToString()}, floor:{CurrentFloor}, Moving to floor {floor}");
             Task.Delay(6000);
             CurrentFloor = floor;

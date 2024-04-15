@@ -9,7 +9,7 @@ namespace ElevatorSystem.Application.Extensions
 {
     public static class ElevatorRequestExtensions
     {
-        public static ElevatorRequest ToElevatorRequest(this ElevatorRequestDto elevatorRequestDto)
+        public static ElevatorRequest ToElevatorRequest(this ElevatorInsideRequestDto elevatorRequestDto)
         {
             return new ElevatorRequest(elevatorRequestDto.Floor, elevatorRequestDto.Direction);
         }
