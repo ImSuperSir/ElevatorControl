@@ -51,23 +51,6 @@ namespace ElevatorSystem.Domain.Entities
             pRequests.ForEach(request => Add(request));
         }
 
-        private IEnumerable<ElevatorRequest> GetFilteredAndOrderedRequests(ElevatorDirection direction, int currentFloor)
-        {
-            IEnumerable<ElevatorRequest> requests = _elevatorRequests.Where(x => x.Direction == direction);
-
-            if (direction == ElevatorDirection.Down)
-            {
-                requests = requests.Where(x => x.ToFloor <= currentFloor)
-                                   .OrderByDescending(x => x.ToFloor);
-            }
-            else if (direction == ElevatorDirection.Up)
-            {
-                requests = requests.Where(x => x.ToFloor >= currentFloor)
-                                   .OrderBy(x => x.ToFloor);
-            }
-
-            return requests;
-        }
 
         public List<ElevatorRequest> GetAllRequests()
         {
@@ -76,20 +59,30 @@ namespace ElevatorSystem.Domain.Entities
                 return _elevatorRequests.ToList();
             }
         }
-        public List<ElevatorRequest> GetAllNextRequest(ElevatorDirection direction, int currentFloor)
-        {
-            lock (_lock)
-            {
-                return GetFilteredAndOrderedRequests(direction, currentFloor).ToList();
-            }
-        }
+  
 
         public ElevatorRequest? GetNextRequest(ElevatorDirection direction, int currentFloor)
         {
-            lock (_lock)
+
+            Func<ElevatorRequest, bool> floorsUpThan = x => x.ToFloor > currentFloor;
+            Func<ElevatorRequest, bool> floorsDownThan = x => x.ToFloor < currentFloor;
+
+            ElevatorDirection oppositeDirection =
+                            direction == ElevatorDirection.Up ? ElevatorDirection.Down : ElevatorDirection.Up;
+
+            IEnumerable<ElevatorRequest> request = _elevatorRequests.OrderBy(x => x.Direction == direction).ThenBy(x => x.Direction == oppositeDirection);
+
+            if (direction == ElevatorDirection.Up)
             {
-                return GetFilteredAndOrderedRequests(direction, currentFloor).FirstOrDefault();
+                request = request.Where(floorsUpThan);
             }
+            else if (direction == ElevatorDirection.Down)
+            {
+                request = request.Where(floorsDownThan);
+            }
+
+
+            return request.FirstOrDefault();
         }
 
         private void Remove(ElevatorRequest pRequest)

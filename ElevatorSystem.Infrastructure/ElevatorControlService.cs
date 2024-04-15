@@ -49,7 +49,7 @@ namespace ElevatorSystem.Infrastructure
                 ElevatorRequest? nextRequest = ElevatorCommands.GetNextRequest(Direction, CurrentFloor);
                 if (nextRequest != null)
                 {
-                    Direction = nextRequest.Direction;
+                    Direction = nextRequest.GetFloorDirection(CurrentFloor);
                     MoveOneStep(nextRequest.NextFloor(CurrentFloor));  //just move one floor
                     if (CurrentFloor == nextRequest.ToFloor)
                     {

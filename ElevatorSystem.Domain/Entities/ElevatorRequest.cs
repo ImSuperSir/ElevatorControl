@@ -9,6 +9,11 @@ namespace ElevatorSystem.Domain.Entities
 
         public int ToFloor { get; init; }
         public ElevatorDirection Direction { get; set; }
+
+        public ElevatorDirection GetFloorDirection(int pCurrentFloor)
+        {
+            return  ToFloor > pCurrentFloor  ?  ElevatorDirection.Up : ElevatorDirection.Down ;
+        }
         RequestFrom RequestSource { get; init; }
 
         /// <summary>
