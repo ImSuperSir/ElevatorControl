@@ -7,6 +7,7 @@ using ElevatorSystem.Domain.Interfaces;
 using Microsoft.Extensions.Hosting;
 using ElevatorSystem.Domain.Events;
 using ElevatorSystem.Domain.Enums;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ElevatorSystem.Infrastructure
 {
@@ -44,7 +45,7 @@ namespace ElevatorSystem.Infrastructure
             await Task.Delay(5000);
             while (!stoppingToken.IsCancellationRequested)
             {
-                 Console.WriteLine($"Elevator:{Id.ToString().Substring(30)} has: {ElevatorCommands.Count} request to attend");   
+                //  Console.WriteLine($"Elevator:{Id.ToString().Substring(30)} has: {ElevatorCommands.Count} request to attend");   
 
                 ElevatorRequest? nextRequest = ElevatorCommands.GetNextRequest(Direction, CurrentFloor);
                 if (nextRequest != null)
@@ -59,9 +60,9 @@ namespace ElevatorSystem.Infrastructure
                 }
                 else
                 {
-                    Console.WriteLine($"No request found, Current Floor :{CurrentFloor }, waiting for 5 seconds");
+                    // Console.WriteLine($"No request found, Current Floor :{CurrentFloor }, waiting for 5 seconds");
                 }
-                await Task.Delay(5000);
+                await Task.Delay(2000);
             }
 
 
@@ -83,6 +84,14 @@ namespace ElevatorSystem.Infrastructure
 
         public void AddRequests(List<ElevatorRequest> requestList)
         {
+            requestList.ForEach( x => 
+            { 
+                if (x.RequestSource == RequestFrom.Inside) 
+                { 
+                    x.FromFloor = CurrentFloor;
+                    x.Direction = x.GetFloorDirection(CurrentFloor) ;  
+                }
+                });
             ElevatorCommands.AddRequestRange(requestList);
         }
 
@@ -93,7 +102,7 @@ namespace ElevatorSystem.Infrastructure
                          return;
             
             Console.WriteLine($"Direction:{Direction.ToString()}, floor:{CurrentFloor}, Moving to floor {floor}");
-            Task.Delay(6000);
+            Task.Delay(5000).Wait();
             CurrentFloor = floor;
             Console.WriteLine($"Direction:{Direction.ToString()}, arrived to floor {CurrentFloor}");
             //OnElevatorMovedToFloot(this, floor);
@@ -105,7 +114,7 @@ namespace ElevatorSystem.Infrastructure
         public void OpenDoor()
         {
             Console.WriteLine($"Direction:{Direction.ToString()}, floor:{CurrentFloor}, Door is opening ");
-            Task.Delay(3000);
+            Task.Delay(5000).Wait();
             Console.WriteLine($"Direction:{Direction.ToString()}, floor:{CurrentFloor}, Door is closing ");
 
             if(CurrentFloor == (int)ElevatorLimits.MaxFloor)
@@ -117,6 +126,7 @@ namespace ElevatorSystem.Infrastructure
                 Direction = ElevatorDirection.Up;
             }
            
+  
         }
 
 

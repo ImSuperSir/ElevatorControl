@@ -40,7 +40,7 @@ namespace ElevatorSystem.Infrastructure
             //await Task.Delay(30000); // just for testing
             while (!stoppingToken.IsCancellationRequested)
             {
-                Console.WriteLine($"Dispatcher:{Id.ToString().Substring(30)} count: {_RequestList.Count} ");
+                // Console.WriteLine($"Dispatcher:{Id.ToString().Substring(30)} count: {_RequestList.Count} ");
                 foreach (var elevator in _ElevatorControllers)
                 {
                     Dispatch(elevator);
@@ -66,7 +66,7 @@ namespace ElevatorSystem.Infrastructure
             {
                 elevator.AddRequests(lElevatorRequest);
                 RemoveRequest(lElevatorRequest); //Remove the request from the list
-                Console.WriteLine($"Request sent to Elevator:{elevator.Id.ToString().Substring(30)}, {_RequestList.Count} requests remaining");
+                // Console.WriteLine($"Request sent to Elevator:{elevator.Id.ToString().Substring(30)}, {_RequestList.Count} requests remaining");
             }
         }
         public void RemoveRequest(List<ElevatorRequest> requestsToRemove)

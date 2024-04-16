@@ -5,16 +5,19 @@ namespace ElevatorSystem.Domain.Entities
 {
     public class ElevatorRequest
     {
-        public int FromFloor { get; init; }
+        public int FromFloor { get; set; }
 
         public int ToFloor { get; init; }
         public ElevatorDirection Direction { get; set; }
 
         public ElevatorDirection GetFloorDirection(int pCurrentFloor)
         {
-            return  ToFloor > pCurrentFloor  ?  ElevatorDirection.Up : ElevatorDirection.Down ;
+            if (pCurrentFloor == ToFloor)
+                return ElevatorDirection.None;
+
+            return ToFloor > pCurrentFloor ? ElevatorDirection.Up : ElevatorDirection.Down;
         }
-        RequestFrom RequestSource { get; init; }
+        public RequestFrom RequestSource { get; init; }
 
         /// <summary>
         /// Inside Request
@@ -41,10 +44,13 @@ namespace ElevatorSystem.Domain.Entities
 
         public int NextFloor(int pCurrentFloor)
         {
-            int x = 0;
+            int x = pCurrentFloor;
 
             switch (Direction, ToFloor, pCurrentFloor)
             {
+                case (ElevatorDirection.None, int toFloor, int currentFloor) when toFloor == currentFloor && Direction == ElevatorDirection.None:
+                    x = currentFloor; // stay at the same floor
+                    break;
                 case (ElevatorDirection.Up, int toFloor, int currentFloor) when toFloor > currentFloor:
                     x = currentFloor + 1;
                     break;
@@ -59,6 +65,11 @@ namespace ElevatorSystem.Domain.Entities
                     break;
             }
             return x;
+        }
+
+        public override string ToString()
+        {
+            return $"Request From: {RequestSource.ToString()}, FromFloor:{FromFloor} tofloor:{ToFloor} Direction: {Direction.ToString()}";
         }
     }
 }

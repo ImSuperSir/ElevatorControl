@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using ElevatorSystem.Domain.Enums;
 
 namespace ElevatorSystem.Domain.Entities
@@ -27,13 +28,14 @@ namespace ElevatorSystem.Domain.Entities
         }
         private void Add(ElevatorRequest request)
         {
+
             lock (_lock)
             {
                 if (!_elevatorRequests.Any(x => x.ToFloor == request.ToFloor
                                     && x.Direction == request.Direction))
                 {
                     _elevatorRequests.Add(request);
-                    Console.WriteLine($"Request added: {request.ToFloor} {request.Direction}, total requests: {_elevatorRequests.Count}");
+                    Console.WriteLine($"Elevator Request added: {request.ToFloor} {request.Direction}, total requests: {_elevatorRequests.Count}");
                 }
                 else
                 {
@@ -59,30 +61,76 @@ namespace ElevatorSystem.Domain.Entities
                 return _elevatorRequests.ToList();
             }
         }
-  
+
 
         public ElevatorRequest? GetNextRequest(ElevatorDirection direction, int currentFloor)
         {
+            List<ElevatorRequest> lResultUp, lResultDown, lResultThisFloor, lResultAll;
 
-            Func<ElevatorRequest, bool> floorsUpThan = x => x.ToFloor > currentFloor;
-            Func<ElevatorRequest, bool> floorsDownThan = x => x.ToFloor < currentFloor;
+            SetElevatorRequests(out lResultUp, out lResultDown, out lResultThisFloor, out lResultAll);
 
-            ElevatorDirection oppositeDirection =
-                            direction == ElevatorDirection.Up ? ElevatorDirection.Down : ElevatorDirection.Up;
+            //PrintCollectionsHelper(currentFloor, lResultUp, lResultDown, lResultAll);
 
-            IEnumerable<ElevatorRequest> request = _elevatorRequests.OrderBy(x => x.Direction == direction).ThenBy(x => x.Direction == oppositeDirection);
+            IEnumerable<ElevatorRequest> request = lResultAll.ToList(); //= _elevatorRequests.OrderBy(x => x.Direction == direction).ThenBy(x => x.Direction == oppositeDirection);
+
+            GetNextElevatorRequestByDirection(ref direction, currentFloor, lResultAll, ref request);
+
+            var lResultFinal = lResultThisFloor.Concat(request).ToList();
+
+            return lResultFinal.FirstOrDefault();
+
+        }
+
+        private void GetNextElevatorRequestByDirection(ref ElevatorDirection direction
+                                , int currentFloor
+                                , List<ElevatorRequest> lResultAll
+                                , ref IEnumerable<ElevatorRequest> request)
+        {
+
+            Func<ElevatorRequest, bool> floorsUpThan = x => x.ToFloor >= currentFloor && x.Direction == ElevatorDirection.Up; ;
+            Func<ElevatorRequest, bool> floorsDownThan = x => x.ToFloor <= currentFloor && x.Direction == ElevatorDirection.Down;
 
             if (direction == ElevatorDirection.Up)
-            {
-                request = request.Where(floorsUpThan);
-            }
+                request = request.Where(floorsUpThan).ToList();
             else if (direction == ElevatorDirection.Down)
+                request = request.Where(floorsDownThan).ToList();
+
+            if (null == request.FirstOrDefault())
             {
-                request = request.Where(floorsDownThan);
+                request = lResultAll.ToList();
+                direction = direction == ElevatorDirection.Up ? ElevatorDirection.Down : ElevatorDirection.Up;
+
+                if (direction == ElevatorDirection.Up)
+                    request = request.Where(x => x.Direction == ElevatorDirection.Up).ToList();
+                else if (direction == ElevatorDirection.Down)
+                    request = request.Where(x => x.Direction == ElevatorDirection.Down).ToList();
             }
+        }
 
+        private void PrintCollectionsHelper(int currentFloor
+                        , List<ElevatorRequest> lResultUp
+                        , List<ElevatorRequest> lResultDown
+                        , List<ElevatorRequest> lResultAll)
+        {
+            Debug.WriteLine("Los que van para arriba");
+            lResultUp.ForEach(x => Debug.WriteLine($"Request: {x.ToFloor} {x.Direction}, Desde mi piso tengo que ir: {x.GetFloorDirection(currentFloor)}, - {x.ToString()}"));
+            Debug.WriteLine("Those who goes down");
+            lResultDown.ForEach(x => Debug.WriteLine($"Request: {x.ToFloor} {x.Direction}, From my floor We need to go towards {x.GetFloorDirection(currentFloor)}, - {x.ToString()}"));
+            Debug.WriteLine("And these are all together");
+            lResultAll.ForEach(x => Debug.WriteLine($"Request: {x.ToFloor} {x.Direction}, From my floor We need to go towards {x.GetFloorDirection(currentFloor)}, - {x.ToString()}"));
+        }
 
-            return request.FirstOrDefault();
+        private void SetElevatorRequests(out List<ElevatorRequest> lResultUp, out List<ElevatorRequest> lResultDown, out List<ElevatorRequest> lResultThisFloor, out List<ElevatorRequest> lResultAll)
+        {
+            lResultUp = _elevatorRequests.Where(x => x.Direction == ElevatorDirection.Up)
+                                     .OrderBy(x => x.ToFloor)
+                                    .ToList();
+            lResultDown = _elevatorRequests.Where(x => x.Direction == ElevatorDirection.Down)
+                                     .OrderByDescending(x => x.ToFloor)
+                                    .ToList();
+            lResultThisFloor = _elevatorRequests.Where(x => x.Direction == ElevatorDirection.None).ToList();
+
+            lResultAll = lResultUp.Concat(lResultDown).ToList();
         }
 
         private void Remove(ElevatorRequest pRequest)
